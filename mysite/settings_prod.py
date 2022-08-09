@@ -18,3 +18,5 @@ DATABASES = {
         'PORT': os.environ.get('db_port', '5432'),
     }
 }
+
+STATIC_ROOT = 'static'
