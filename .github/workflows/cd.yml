@@ -12,27 +12,13 @@ jobs:
       matrix:
         python-version:  [3.9]
     steps:
-      - name: activate env
+      - name: deploy command
         uses: JimCronqvist/action-ssh@master
         with:
-          command: source venv/bin/activate
-          hosts: ${{ secrets.HOST }}
-          privateKey: ${{ secrets.PRIVATE_KEY}}
-      - name: pull last code
-        uses: JimCronqvist/action-ssh@master
-        with:
-          command: cd cicdlecture; git pull
-          hosts: ${{ secrets.HOST }}
-          privateKey: ${{ secrets.PRIVATE_KEY}}
-      - name: collect static
-        uses: JimCronqvist/action-ssh@master
-        with:
-          command: python manage.py collectstatic --no-input
-          hosts: ${{ secrets.HOST }}
-          privateKey: ${{ secrets.PRIVATE_KEY}}
-      - name: restart services
-        uses: JimCronqvist/action-ssh@master
-        with:
-          command: sudo systemctl restart gunicorn; sudo systemctl restart nginx
+          command: |
+            source venv/bin/activate
+            cd cicdlecture; git pull
+            python manage.py collectstatic --no-input
+            sudo systemctl restart gunicorn; sudo systemctl restart nginx
           hosts: ${{ secrets.HOST }}
           privateKey: ${{ secrets.PRIVATE_KEY}}
